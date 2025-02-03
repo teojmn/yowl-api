@@ -832,7 +832,7 @@ app.get('/sports/:id', (req, res) => {
 //------------------------------------------
 // Route pour créer un profil (étape 1 sur 2)
 app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
-  const { username, sports_pratiqués, bio } = req.body;
+  const { username, sports_pratiqués} = req.body;
 
   if (!username) {
     return res.status(400).json({ error: 'Username est requis' });
