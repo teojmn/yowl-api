@@ -832,10 +832,10 @@ app.get('/sports/:id', (req, res) => {
 //------------------------------------------
 // Route pour créer un profil (étape 1 sur 2)
 app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
-  const { username, sports_pratiqués } = req.body;
+  const { username, sports_pratiqués, user_id } = req.body;
 
-  if (!username) {
-    return res.status(400).json({ error: 'Username est requis' });
+  if (!username || !user_id) {
+    return res.status(400).json({ error: 'Username et user_id sont requis' });
   }
 
   let photo_profil = null;
@@ -844,10 +844,10 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
   }
 
   const insertMediaQuery = `
-    INSERT INTO MEDIAS (filepath) VALUES (?)
+    INSERT INTO MEDIAS (filepath, user_id) VALUES (?, ?)
   `;
 
-  db.query(insertMediaQuery, [photo_profil], (err, mediaResults) => {
+  db.query(insertMediaQuery, [photo_profil, user_id], (err, mediaResults) => {
     if (err) {
       console.error('Erreur lors de l\'insertion du média:', err);
       return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
