@@ -844,7 +844,7 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
   }
 
   const insertMediaQuery = `
-    INSERT INTO MEDIAS (file_path) VALUES (?)
+    INSERT INTO MEDIAS (filepath) VALUES (?)
   `;
 
   db.query(insertMediaQuery, [photo_profil], (err, mediaResults) => {
