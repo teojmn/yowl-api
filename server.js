@@ -123,7 +123,7 @@ app.post('/login', (req, res) => {
 
       console.log('Creating token for user:', user); // Log user details
 
-      const token = jwt.sign({ id: user.user_id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+      const token = jwt.sign({ id: user.user_id, email: user.email, role: user.role }, JWT_SECRET);
 
       res.json({ token });
     });
