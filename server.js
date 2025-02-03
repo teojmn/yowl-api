@@ -827,3 +827,33 @@ app.get('/sports/:id', (req, res) => {
     res.json(results[0]);
   });
 });
+
+
+//------------------------------------------
+// Routes pour créer un profil
+app.post('/Profil-1-2', (req, res) => {
+  const { username, photo_profil, sports_pratiqués, sports_suivis, bio } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: 'Username est requis' });
+  }
+
+  const query = `
+    INSERT INTO profil (username, photo_profil, sports_pratiqués, sports_suivis, bio, nb_abonnés, nb_abonnements)
+    VALUES (?, ?, ?, NULL, NULL, 0, 0)
+  `;
+  db.query(query, [
+    username,
+    photo_profil || null,
+    JSON.stringify(sports_pratiqués) || null,
+    JSON.stringify(sports_suivis) || null,
+    bio || null
+  ], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la création du profil:', err);
+      return res.status(500).json({ error: 'Erreur lors de la création du profil' });
+    }
+
+    res.status(201).json({ message: 'Profil créé avec succès', profilId: results.insertId });
+  });
+});
