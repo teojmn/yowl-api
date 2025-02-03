@@ -832,45 +832,60 @@ app.get('/sports/:id', (req, res) => {
 //------------------------------------------
 // Route pour créer un profil (étape 1 sur 2)
 app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
-  const { username, sports_pratiqués, user_id } = req.body;
+  const { username, sports_pratiqués } = req.body;
 
-  if (!username || !user_id) {
-    return res.status(400).json({ error: 'Username et user_id sont requis' });
+  if (!username) {
+    return res.status(400).json({ error: 'Username est requis' });
   }
 
-  let photo_profil = null;
-  if (req.file) {
-    photo_profil = `/uploads/${req.file.filename}`;
-  }
-
-  const insertMediaQuery = `
-    INSERT INTO MEDIAS (filepath, user_id) VALUES (?, ?)
-  `;
-
-  db.query(insertMediaQuery, [photo_profil, user_id], (err, mediaResults) => {
+  // Récupérer l'user_id à partir de l'username
+  const getUserQuery = 'SELECT user_id FROM USERS WHERE username = ?';
+  db.query(getUserQuery, [username], (err, userResults) => {
     if (err) {
-      console.error('Erreur lors de l\'insertion du média:', err);
-      return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
+      console.error('Erreur lors de la récupération de l\'user_id:', err);
+      return res.status(500).json({ error: 'Erreur interne' });
     }
 
-    const mediaId = mediaResults.insertId;
+    if (userResults.length === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
 
-    const insertProfileQuery = `
-      INSERT INTO PROFIL (username, photo_profil, sports_pratiqués, nb_abonnés, nb_abonnements)
-      VALUES (?, ?, ?, 0, 0)
+    const user_id = userResults[0].user_id;
+
+    let photo_profil = null;
+    if (req.file) {
+      photo_profil = `/uploads/${req.file.filename}`;
+    }
+
+    const insertMediaQuery = `
+      INSERT INTO MEDIAS (filepath, user_id) VALUES (?, ?)
     `;
 
-    db.query(insertProfileQuery, [
-      username,
-      mediaId,
-      JSON.stringify(sports_pratiqués) || null,
-    ], (err, profileResults) => {
+    db.query(insertMediaQuery, [photo_profil, user_id], (err, mediaResults) => {
       if (err) {
-        console.error('Erreur lors de la création du profil:', err);
-        return res.status(500).json({ error: 'Erreur lors de la création du profil' });
+        console.error('Erreur lors de l\'insertion du média:', err);
+        return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
       }
 
-      res.status(201).json({ message: 'Profil créé avec succès', profilId: profileResults.insertId });
+      const mediaId = mediaResults.insertId;
+
+      const insertProfileQuery = `
+        INSERT INTO PROFIL (username, photo_profil, sports_pratiqués, nb_abonnés, nb_abonnements)
+        VALUES (?, ?, ?, 0, 0)
+      `;
+
+      db.query(insertProfileQuery, [
+        username,
+        mediaId,
+        JSON.stringify(sports_pratiqués) || null,
+      ], (err, profileResults) => {
+        if (err) {
+          console.error('Erreur lors de la création du profil:', err);
+          return res.status(500).json({ error: 'Erreur lors de la création du profil' });
+        }
+
+        res.status(201).json({ message: 'Profil créé avec succès', profilId: profileResults.insertId });
+      });
     });
   });
 });
