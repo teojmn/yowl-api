@@ -831,7 +831,7 @@ app.get('/sports/:id', (req, res) => {
 
 //------------------------------------------
 // Routes pour créer un profil
-app.post('/Profil-1-2', (req, res) => {
+app.post('/profil-1-2', (req, res) => {
   const { username, photo_profil, sports_pratiqués, sports_suivis, bio } = req.body;
 
   if (!username) {
