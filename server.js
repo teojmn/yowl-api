@@ -830,7 +830,7 @@ app.get('/sports/:id', (req, res) => {
 
 
 //------------------------------------------
-// Routes pour créer un profil
+// Route pour créer un profil (étape 1 sur 2)
 app.post('/profil-1-2', (req, res) => {
   const { username, photo_profil, sports_pratiqués, sports_suivis, bio } = req.body;
 
@@ -853,5 +853,25 @@ app.post('/profil-1-2', (req, res) => {
     }
 
     res.status(201).json({ message: 'Profil créé avec succès', profilId: results.insertId });
+  });
+});
+
+// Route pour créer un profil (étape 2 sur 2)
+app.put('/profil-2-2/:id', (req, res) => {
+  const profilId = req.params.id;
+  const { sports_suivis} = req.body;
+
+  if (!profilId) {
+    return res.status(400).json({ error: 'ID du profil requis' });
+  }
+
+  const query = 'UPDATE PROFIL SET sports_suivis = ?, WHERE id_profil = ?';
+  db.query(query, [JSON.stringify(sports_suivis), profilId], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la mise à jour du profil:', err);
+      return res.status(500).json({ error: 'Erreur lors de la mise à jour du profil' });
+    }
+
+    res.status(200).json({ message: 'Profil mis à jour avec succès' });
   });
 });
