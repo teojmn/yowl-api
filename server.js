@@ -857,16 +857,16 @@ app.post('/profil-1-2', (req, res) => {
 });
 
 // Route pour créer un profil (étape 2 sur 2)
-app.put('/profil-2-2/:id', (req, res) => {
-  const profilId = req.params.id;
-  const { sports_suivis} = req.body;
+app.put('/profil-2-2/:username', (req, res) => {
+  const username = req.params.username;
+  const { sports_suivis } = req.body;
 
-  if (!profilId) {
-    return res.status(400).json({ error: 'ID du profil requis' });
+  if (!username) {
+    return res.status(400).json({ error: 'Username requis' });
   }
 
-  const query = 'UPDATE PROFIL SET sports_suivis = ?, WHERE id_profil = ?';
-  db.query(query, [JSON.stringify(sports_suivis), profilId], (err, results) => {
+  const query = 'UPDATE PROFIL SET sports_suivis = ? WHERE username = ?';
+  db.query(query, [JSON.stringify(sports_suivis), username], (err, results) => {
     if (err) {
       console.error('Erreur lors de la mise à jour du profil:', err);
       return res.status(500).json({ error: 'Erreur lors de la mise à jour du profil' });
