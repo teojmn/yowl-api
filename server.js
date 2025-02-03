@@ -845,9 +845,7 @@ app.post('/profil-1-2', (req, res) => {
   db.query(query, [
     username,
     photo_profil || null,
-    JSON.stringify(sports_pratiqués) || null,
-    JSON.stringify(sports_suivis) || null,
-    bio || null
+    JSON.sports_pratiqués || null,
   ], (err, results) => {
     if (err) {
       console.error('Erreur lors de la création du profil:', err);
