@@ -831,11 +831,16 @@ app.get('/sports/:id', (req, res) => {
 
 //------------------------------------------
 // Route pour créer un profil (étape 1 sur 2)
-app.post('/profil-1-2', (req, res) => {
-  const { username, photo_profil, sports_pratiqués, sports_suivis, bio } = req.body;
+app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
+  const { username, sports_pratiqués, bio } = req.body;
 
   if (!username) {
     return res.status(400).json({ error: 'Username est requis' });
+  }
+
+  let photo_profil = null;
+  if (req.file) {
+    photo_profil = `/uploads/${req.file.filename}`;
   }
 
   const query = `
@@ -844,7 +849,7 @@ app.post('/profil-1-2', (req, res) => {
   `;
   db.query(query, [
     username,
-    photo_profil || null,
+    photo_profil,
     JSON.stringify(sports_pratiqués) || null,
   ], (err, results) => {
     if (err) {
