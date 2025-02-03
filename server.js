@@ -839,7 +839,7 @@ app.post('/profil-1-2', (req, res) => {
   }
 
   const query = `
-    INSERT INTO profil (username, photo_profil, sports_pratiqués, nb_abonnés, nb_abonnements)
+    INSERT INTO PROFIL (username, photo_profil, sports_pratiqués, nb_abonnés, nb_abonnements)
     VALUES (?, ?, ?, 0, 0)
   `;
   db.query(query, [
