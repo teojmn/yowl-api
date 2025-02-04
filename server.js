@@ -879,6 +879,7 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
         mediaId,
         JSON.stringify(sports_pratiqués),
       ], (err, profileResults) => {
+        console.log('profileResults:', username, mediaId, sports_pratiqués);/////
         if (err) {
           console.error('Erreur lors de la création du profil:', err);
           console.log('profileResults:', username, mediaId, sports_pratiqués);/////
