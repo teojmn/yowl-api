@@ -856,10 +856,17 @@ app.get('/sports/:id', (req, res) => {
 //------------------------------------------
 // Route pour créer un profil (étape 1 sur 2)
 app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
-  console.log('Corps de la requête:', req.body);
-  console.log('Fichier:', req.file);
+  console.log("🚀 Requête reçue sur /profil-1-2 !");
+  console.log("Body reçu:", req.body);
+  console.log("Fichier reçu:", req.file);
 
   const { username, sports_pratiques } = req.body;
+
+  if (!req.file) {
+    console.log("❌ Aucune image reçue !");
+  }
+  if (!req.body.username || !req.body.sports_pratiques) {
+    console.log("❌ Données manquantes :", req.body);
 
   if (!username || !sports_pratiques) {
     return res.status(400).json({ error: 'Username et sports_pratiques sont requis' });
