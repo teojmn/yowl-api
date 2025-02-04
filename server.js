@@ -848,49 +848,34 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
     return res.status(400).json({ error: 'sports_pratiques doit être un tableau JSON valide' });
   }
 
-  // Récupérer l'user_id à partir de l'username
-  const getUserQuery = 'SELECT user_id FROM USERS WHERE username = ?';
-  db.query(getUserQuery, [username], (err, userResults) => {
+  let photo_profil = null;
+  if (req.file) {
+    photo_profil = `/uploads/${req.file.filename}`;
+  }
+
+  const insertMediaQuery = `
+    INSERT INTO MEDIAS (filepath, username) VALUES (?, ?)
+  `;
+
+  db.query(insertMediaQuery, [photo_profil, username], (err, mediaResults) => {
     if (err) {
-      console.error('Erreur lors de la récupération de l\'user_id:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      console.error('Erreur lors de l\'insertion du média:', err);
+      return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
     }
 
-    if (userResults.length === 0) {
-      return res.status(404).json({ error: 'Utilisateur non trouvé' });
-    }
+    const mediaId = mediaResults.insertId;
 
-    const user_id = userResults[0].user_id;
-
-    let photo_profil = null;
-    if (req.file) {
-      photo_profil = `/uploads/${req.file.filename}`;
-    }
-
-    const insertMediaQuery = `
-      INSERT INTO MEDIAS (filepath, user_id) VALUES (?, ?)
+    const insertProfileQuery = `
+      INSERT INTO PROFIL (username, photo_profil, sports_pratiqués) VALUES (?, ?, ?)
     `;
 
-    db.query(insertMediaQuery, [photo_profil, user_id], (err, mediaResults) => {
+    db.query(insertProfileQuery, [username, mediaId, JSON.stringify(parsedSportsPratiques)], (err, profileResults) => {
       if (err) {
-        console.error('Erreur lors de l\'insertion du média:', err);
-        return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
+        console.error('Erreur lors de la création du profil:', err);
+        return res.status(500).json({ error: 'Erreur lors de la création du profil' });
       }
 
-      const mediaId = mediaResults.insertId;
-
-      const insertProfileQuery = `
-        INSERT INTO PROFIL (user_id, mediaId, sports_pratiqués) VALUES (?, ?, ?)
-      `;
-
-      db.query(insertProfileQuery, [user_id, mediaId, JSON.stringify(parsedSportsPratiques)], (err, profileResults) => {
-        if (err) {
-          console.error('Erreur lors de la création du profil:', err);
-          return res.status(500).json({ error: 'Erreur lors de la création du profil' });
-        }
-
-        res.status(201).json({ message: 'Profil créé avec succès', profilId: profileResults.insertId });
-      });
+      res.status(201).json({ message: 'Profil créé avec succès', profilId: profileResults.insertId });
     });
   });
 });
