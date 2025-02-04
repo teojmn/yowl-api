@@ -891,7 +891,7 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
 });
 
 // Route pour créer un profil (étape 2 sur 2)
-app.put('/profil-2-2/:username', (req, res) => {
+app.put('/profil-2-2/', (req, res) => {
   const { sports_suivis, username} = req.body;
 
   if (!username) {
