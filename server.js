@@ -867,6 +867,8 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
   }
   if (!req.body.username || !req.body.sports_pratiques) {
     console.log("❌ Données manquantes :", req.body);
+    return res.status(400).json({ error: 'Username et sports_pratiques sont requis' });
+  }
 
   if (!username || !sports_pratiques) {
     return res.status(400).json({ error: 'Username et sports_pratiques sont requis' });
