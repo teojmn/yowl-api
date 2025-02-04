@@ -74,33 +74,20 @@ app.get('/test', (req, res) => {
 //------------------------------------------
 // Route pour créer un utilisateur (register)
 app.post('/register', (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password } = req.body;
 
-  if (!username || !password || !email) {
-    return res.status(400).json({ error: 'Tous les champs sont requis.' });
-  }
+  // Hash the password and insert the new user into the database
+  const hashedPassword = hashPassword(password);
+  const insertUserQuery = 'INSERT INTO USERS (username, password) VALUES (?, ?)';
 
-  db.query('SELECT * FROM USERS WHERE username = ?', [username], (err, results) => {
-    if (err) return res.status(500).json({ error: 'Erreur interne.' });
+  db.query(insertUserQuery, [username, hashedPassword], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de l\'insertion de l\'utilisateur:', err);
+      return res.status(500).json({ error: 'Erreur interne' });
+    }
 
-    if (results.length > 0) return res.status(409).json({ error: 'Le username est déjà utilisé.' });
-
-    db.query('SELECT * FROM USERS WHERE email = ?', [email], (err, results) => {
-      if (err) return res.status(500).json({ error: 'Erreur interne.' });
-
-      if (results.length > 0) return res.status(409).json({ error: 'L\'email est déjà utilisé.' });
-
-      bcrypt.hash(password, 10, (err, hashedPassword) => {
-        if (err) return res.status(500).json({ error: 'Erreur interne.' });
-
-        db.query('INSERT INTO USERS (username, password, email) VALUES (?, ?, ?)',
-          [username, hashedPassword, email], (err, results) => {
-            if (err) return res.status(500).json({ error: 'Erreur interne.' });
-
-            res.status(201).json({ message: 'Utilisateur créé avec succès.', userId: results.insertId });
-          });
-      });
-    });
+    // Assuming the user was successfully inserted, return the username in the response
+    return res.status(201).json({ message: 'Utilisateur créé avec succès', username: username });
   });
 });
 
