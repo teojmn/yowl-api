@@ -877,11 +877,11 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
       db.query(insertProfileQuery, [
         username,
         mediaId,
-        JSON.stringify(sports_pratiqués) || null,
+        JSON.stringify(sports_pratiqués),
       ], (err, profileResults) => {
         if (err) {
           console.error('Erreur lors de la création du profil:', err);
-          console.log('profileResults:', username, mediaId, sports_pratiqués);
+          console.log('profileResults:', username, mediaId, sports_pratiqués);/////
           return res.status(500).json({ error: 'Erreur lors de la création du profil' });
         }
 
