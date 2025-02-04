@@ -791,6 +791,26 @@ app.delete('/events/:id/participants', verifyToken, (req, res) => {
   });
 });
 
+// Route pour récupérer le nombre de participants d'un évènement et le nombre_max de participants
+app.get('/events/:id/participants/count', (req, res) => {
+  const eventId = req.params.id;
+
+  db.query('SELECT COUNT(*) AS count FROM EVENT_PARTICIPANTS WHERE event_id = ?', [eventId], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération du nombre de participants:', err);
+      return res.status(500).json({ error: 'Erreur interne' });
+    }
+
+    db.query('SELECT nb_participants_max FROM EVENTS WHERE id_event = ?', [eventId], (err, maxResults) => {
+      if (err) {
+        console.error('Erreur lors de la récupération du nombre maximal de participants:', err);
+        return res.status(500).json({ error: 'Erreur interne' });
+      }
+
+      res.json({ participants: results[0].count, maxParticipants: maxResults[0].nb_participants_max });
+    });
+  });
+});
 
 //------------------------------------------
 // Routes sports
