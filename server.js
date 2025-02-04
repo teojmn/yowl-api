@@ -142,7 +142,10 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
       console.error('Erreur lors de la recherche de l\'utilisateur :', err);
       return res.status(500).json({ error: 'Erreur interne' });
     }
-    if (results.length === 0) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    if (results.length === 0) {
+      console.error('Utilisateur non trouvé pour userId :', userId);
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
 
     // Si l'utilisateur existe, on continue avec l'upload
     const filename = req.file.filename;
@@ -159,6 +162,7 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
         return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
       }
 
+      console.log('Résultat de l\'insertion du média :', result);
       res.status(201).json({ message: 'Média uploadé avec succès', mediaId: result.insertId });
     });
   });
