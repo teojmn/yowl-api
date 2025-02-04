@@ -835,10 +835,17 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
   console.log('Corps de la requête:', req.body);
   console.log('Fichier:', req.file);
 
-  const { username, sports_pratiqués } = req.body;
+  const { username, sports_pratiques } = req.body;
 
-  if (!username || !sports_pratiqués) {
-    return res.status(400).json({ error: 'Username et sports_pratiqués sont requis' });
+  if (!username || !sports_pratiques) {
+    return res.status(400).json({ error: 'Username et sports_pratiques sont requis' });
+  }
+
+  let parsedSportsPratiques;
+  try {
+    parsedSportsPratiques = JSON.parse(sports_pratiques);
+  } catch (error) {
+    return res.status(400).json({ error: 'sports_pratiques doit être un tableau JSON valide' });
   }
 
   // Récupérer l'user_id à partir de l'username
@@ -876,7 +883,7 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
         INSERT INTO PROFIL (user_id, mediaId, sports_pratiqués) VALUES (?, ?, ?)
       `;
 
-      db.query(insertProfileQuery, [user_id, mediaId, JSON.stringify(sports_pratiqués)], (err, profileResults) => {
+      db.query(insertProfileQuery, [user_id, mediaId, JSON.stringify(parsedSportsPratiques)], (err, profileResults) => {
         if (err) {
           console.error('Erreur lors de la création du profil:', err);
           return res.status(500).json({ error: 'Erreur lors de la création du profil' });
