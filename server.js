@@ -834,8 +834,8 @@ app.get('/sports/:id', (req, res) => {
 app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
   const { username, sports_pratiqués } = req.body;
 
-  if (!username) {
-    return res.status(400).json({ error: 'Username est requis' });
+  if (!username || !sports_pratiqués) {
+    return res.status(400).json({ error: 'Username et sports_pratiqués sont requis' });
   }
 
   // Récupérer l'user_id à partir de l'username
@@ -870,19 +870,12 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
       const mediaId = mediaResults.insertId;
 
       const insertProfileQuery = `
-        INSERT INTO PROFIL (username, photo_profil, sports_pratiqués, nb_abonnés, nb_abonnements)
-        VALUES (?, ?, ?, 0, 0)
+        INSERT INTO PROFIL (user_id, mediaId, sports_pratiqués) VALUES (?, ?, ?)
       `;
 
-      db.query(insertProfileQuery, [
-        username,
-        mediaId,
-        JSON.stringify(sports_pratiqués),
-      ], (err, profileResults) => {
-        console.log('profileResults:', username, mediaId, sports_pratiqués);/////
+      db.query(insertProfileQuery, [user_id, mediaId, JSON.stringify(sports_pratiqués)], (err, profileResults) => {
         if (err) {
           console.error('Erreur lors de la création du profil:', err);
-          console.log('profileResults:', username, mediaId, sports_pratiqués);/////
           return res.status(500).json({ error: 'Erreur lors de la création du profil' });
         }
 
