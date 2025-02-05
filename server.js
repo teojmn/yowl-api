@@ -170,7 +170,7 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
 
 //------------------------------------------
 // Route pour récupérer les médias d'un utilisateur
-app.get('/media/:user_id', verifyToken, (req, res) => {
+app.get('/media/user/:user_id', (req, res) => {
   const { user_id } = req.params;
 
   console.log('Requête pour récupérer les médias de l\'utilisateur avec user_id:', user_id);
