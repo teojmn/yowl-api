@@ -415,7 +415,7 @@ app.post('/posts-media', verifyToken, upload.single('file'), (req, res) => {
 
 // Route pour récupérer tous les posts médias
 app.get('/posts-media', (req, res) => {
-  const query = 'SELECT * FROM MEDIA_POSTS';
+  const query = 'SELECT * FROM POST_MEDIA';
 
   db.query(query, (err, results) => {
     if (err) {
