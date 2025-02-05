@@ -413,6 +413,29 @@ app.post('/posts-media', verifyToken, upload.single('file'), (req, res) => {
   });
 });
 
+// Route pour récupérer tous les posts médias
+app.get('/posts-media', (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1; // Page par défaut : 1
+  const limit = parseInt(req.query.limit, 10) || 10; // Limite par défaut : 10 posts par requête
+  const offset = (page - 1) * limit;
+
+  const query = 'SELECT * FROM POST_MEDIA';
+  const queryParams = [limit, offset];
+
+  db.query(query, queryParams, (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération des posts médias:', err);
+      return res.status(500).json({ error: 'Erreur lors de la récupération des posts' });
+    }
+
+    // Vérifie s'il reste encore des posts à charger
+    const nextPage = results.length === limit ? page + 1 : null;
+
+    res.json({ posts: results, nextPage });
+  });
+});
+
+
 
 //------------------------------------------
 // Routes articles
