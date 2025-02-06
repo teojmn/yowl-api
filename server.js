@@ -83,7 +83,7 @@ app.post('/register', (req, res) => {
   db.query('SELECT * FROM USERS WHERE username = ?', [username], (err, results) => {
     if (err) return res.status(500).json({ error: 'Erreur interne.' });
 
-    if (results.length > 0) return res.status(409).json({ error: 'Le username est déjà utilisé.' });
+    if (results.length > 0) return res.status(409).json({ error: 'Aïe, cet username est déjà pris...' });
 
     db.query('SELECT * FROM USERS WHERE email = ?', [email], (err, results) => {
       if (err) return res.status(500).json({ error: 'Erreur interne.' });
@@ -97,7 +97,7 @@ app.post('/register', (req, res) => {
           [username, hashedPassword, email], (err, results) => {
             if (err) return res.status(500).json({ error: 'Erreur interne.' });
 
-            res.status(201).json({ message: 'Utilisateur créé avec succès.', userId: results.insertId, username});
+            res.status(201).json({ message: 'Ça y est, on a créé ton compte !', userId: results.insertId, username});
           });
       });
     });
@@ -112,14 +112,14 @@ app.post('/login', (req, res) => {
   db.query('SELECT * FROM USERS WHERE email = ?', [email], (err, results) => {
     if (err) return res.status(500).json({ error: 'Erreur interne' });
 
-    if (results.length === 0) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    if (results.length === 0) return res.status(404).json({ error: 'Il semble que tu n\'as pas de compte !' });
 
     const user = results[0];
 
     bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) return res.status(500).json({ error: 'Erreur de vérification' });
+      if (err) return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
 
-      if (!isMatch) return res.status(401).json({ error: 'Mot de passe incorrect' });
+      if (!isMatch) return res.status(401).json({ error: 'Il semble que ce n\'est pas le bon mot de passe 🤔' });
 
       console.log('Creating token for user:', user); // Log user details
 
