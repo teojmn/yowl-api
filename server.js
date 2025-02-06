@@ -81,21 +81,21 @@ app.post('/register', (req, res) => {
   }
 
   db.query('SELECT * FROM USERS WHERE username = ?', [username], (err, results) => {
-    if (err) return res.status(500).json({ error: 'Erreur interne.' });
+    if (err) return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅.' });
 
     if (results.length > 0) return res.status(409).json({ error: 'Aïe, cet username est déjà pris...' });
 
     db.query('SELECT * FROM USERS WHERE email = ?', [email], (err, results) => {
-      if (err) return res.status(500).json({ error: 'Erreur interne.' });
+      if (err) return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅.' });
 
       if (results.length > 0) return res.status(409).json({ error: 'L\'email est déjà utilisé.' });
 
       bcrypt.hash(password, 10, (err, hashedPassword) => {
-        if (err) return res.status(500).json({ error: 'Erreur interne.' });
+        if (err) return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅.' });
 
         db.query('INSERT INTO USERS (username, password, email) VALUES (?, ?, ?)',
           [username, hashedPassword, email], (err, results) => {
-            if (err) return res.status(500).json({ error: 'Erreur interne.' });
+            if (err) return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅.' });
 
             res.status(201).json({ message: 'Ça y est, on a créé ton compte !', userId: results.insertId, username});
           });
@@ -110,7 +110,7 @@ app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   db.query('SELECT * FROM USERS WHERE email = ?', [email], (err, results) => {
-    if (err) return res.status(500).json({ error: 'Erreur interne' });
+    if (err) return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
 
     if (results.length === 0) return res.status(404).json({ error: 'Il semble que tu n\'as pas de compte...' });
 
@@ -140,7 +140,7 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
   db.query('SELECT user_id FROM USERS WHERE user_id = ?', [userId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la recherche de l\'utilisateur :', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
     if (results.length === 0) {
       console.error('Utilisateur non trouvé pour userId :', userId);
@@ -178,7 +178,7 @@ app.get('/media/user/:user_id', (req, res) => {
   db.query('SELECT * FROM MEDIAS WHERE user_id = ?', [user_id], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des médias :', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     console.log('Résultats de la requête:', results);
@@ -211,7 +211,7 @@ app.get('/media/id/:id_media', (req, res) => {
   db.query('SELECT * FROM MEDIAS WHERE id_media = ?', [id_media], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du média :', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (results.length === 0) {
@@ -329,7 +329,7 @@ app.post('/posts-txt/:id/like', verifyToken, (req, res) => {
   db.query('SELECT * FROM POST_TXT WHERE post_txt_id = ?', [postId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la vérification du post:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (results.length === 0) {
@@ -340,7 +340,7 @@ app.post('/posts-txt/:id/like', verifyToken, (req, res) => {
     db.query('UPDATE POST_TXT SET likes = likes + 1 WHERE post_txt_id = ?', [postId], (err, results) => {
       if (err) {
         console.error('Erreur lors de l\'ajout du like:', err);
-        return res.status(500).json({ error: 'Erreur interne' });
+        return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
       }
 
       res.status(200).json({ message: 'Like ajouté avec succès' });
@@ -496,7 +496,7 @@ app.post('/articles', verifyToken, upload.single('file'), (req, res) => {
   db.query(getUserQuery, [userId], (err, userResults) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (userResults.length === 0) {
@@ -606,7 +606,7 @@ app.post('/events', verifyToken, upload.single('file'), (req, res) => {
   db.query(getUserQuery, [userId], (err, userResults) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (userResults.length === 0) {
@@ -664,7 +664,7 @@ app.put('/events/:id', verifyToken, (req, res) => {
   db.query(getUserQuery, [userId], (err, userResults) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (userResults.length === 0) {
@@ -720,7 +720,7 @@ app.post('/events/:id/participants', verifyToken, (req, res) => {
   db.query('SELECT * FROM EVENTS WHERE id_event = ?', [eventId], (err, eventResults) => {
     if (err) {
       console.error('Erreur lors de la récupération de l\'événement:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (eventResults.length === 0) {
@@ -731,7 +731,7 @@ app.post('/events/:id/participants', verifyToken, (req, res) => {
     db.query('SELECT * FROM EVENT_PARTICIPANTS WHERE event_id = ? AND user_id = ?', [eventId, userId], (err, participantResults) => {
       if (err) {
         console.error('Erreur lors de la vérification du participant:', err);
-        return res.status(500).json({ error: 'Erreur interne' });
+        return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
       }
 
       if (participantResults.length > 0) {
@@ -744,7 +744,7 @@ app.post('/events/:id/participants', verifyToken, (req, res) => {
       db.query('SELECT COUNT(*) AS count FROM EVENT_PARTICIPANTS WHERE event_id = ?', [eventId], (err, countResults) => {
         if (err) {
           console.error('Erreur lors du comptage des participants:', err);
-          return res.status(500).json({ error: 'Erreur interne' });
+          return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
         }
 
         const currentParticipants = countResults[0].count;
@@ -757,7 +757,7 @@ app.post('/events/:id/participants', verifyToken, (req, res) => {
         db.query('INSERT INTO EVENT_PARTICIPANTS (event_id, user_id) VALUES (?, ?)', [eventId, userId], (err) => {
           if (err) {
             console.error('Erreur lors de l\'ajout du participant:', err);
-            return res.status(500).json({ error: 'Erreur interne' });
+            return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
           }
 
           res.status(201).json({ message: 'Utilisateur ajouté à l\'événement avec succès' });
@@ -779,7 +779,7 @@ app.get('/events/:id/participants', (req, res) => {
   `, [eventId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des participants:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     res.json({ participants: results });
@@ -795,7 +795,7 @@ app.delete('/events/:id/participants', verifyToken, (req, res) => {
   db.query('DELETE FROM EVENT_PARTICIPANTS WHERE event_id = ? AND user_id = ?', [eventId, userId], (err, result) => {
     if (err) {
       console.error('Erreur lors du retrait du participant:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (result.affectedRows === 0) {
@@ -813,13 +813,13 @@ app.get('/events/:id/participants/count', (req, res) => {
   db.query('SELECT COUNT(*) AS count FROM EVENT_PARTICIPANTS WHERE event_id = ?', [eventId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du nombre de participants:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     db.query('SELECT nb_participants_max FROM EVENTS WHERE id_event = ?', [eventId], (err, maxResults) => {
       if (err) {
         console.error('Erreur lors de la récupération du nombre maximal de participants:', err);
-        return res.status(500).json({ error: 'Erreur interne' });
+        return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
       }
 
       res.json({ participants: results[0].count, maxParticipants: maxResults[0].nb_participants_max });
@@ -903,7 +903,7 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
   db.query(getUserQuery, [username], (err, userResults) => {
     if (err) {
       console.error('Erreur lors de la récupération de l\'user_id:', err);
-      return res.status(500).json({ error: 'Erreur interne' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (userResults.length === 0) {
