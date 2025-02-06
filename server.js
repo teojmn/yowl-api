@@ -112,7 +112,7 @@ app.post('/login', (req, res) => {
   db.query('SELECT * FROM USERS WHERE email = ?', [email], (err, results) => {
     if (err) return res.status(500).json({ error: 'Erreur interne' });
 
-    if (results.length === 0) return res.status(404).json({ error: 'Il semble que tu n\'as pas de compte !' });
+    if (results.length === 0) return res.status(404).json({ error: 'Il semble que tu n\'as pas de compte...' });
 
     const user = results[0];
 
