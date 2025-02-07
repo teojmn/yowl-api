@@ -1009,8 +1009,8 @@ app.put('/profil-2-2/', (req, res) => {
 
 
 // Route pour récupérer un profil par son user_id
-app.get('/profil/:user_id', (req, res) => {
-  const { user_id } = req.params;
+app.get('/profil', verifyToken, (req, res) => {
+  const user_id = req.user.id; // Récupération automatique via le token JWT
 
   console.log('Requête pour récupérer le profil avec user_id:', user_id); // Log the user_id
 
