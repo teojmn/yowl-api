@@ -135,7 +135,7 @@ app.post('/login', (req, res) => {
 app.get('/users', (req, res) => {
   db.query('SELECT username, photo_profil FROM PROFIL', (err, results) => {
     if (err) {
-      return res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
     res.json(results);
   });
@@ -155,7 +155,7 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
     }
     if (results.length === 0) {
       console.error('Utilisateur non trouvé pour userId :', userId);
-      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+      return res.status(404).json({ error: 'Utilisateur non trouvé 🫥' });
     }
 
     // Si l'utilisateur existe, on continue avec l'upload
@@ -170,7 +170,7 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
     db.query(insertMediaQuery, [userId, filename, filetype, filepath], (err, result) => {
       if (err) {
         console.error('Erreur lors de l\'insertion du média :', err);
-        return res.status(500).json({ error: 'Erreur lors de l\'insertion du média' });
+        return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
       }
 
       console.log('Résultat de l\'insertion du média :', result);
@@ -196,7 +196,7 @@ app.get('/media/user/:user_id', verifyToken, (req, res) => {
 
     console.log('Résultats de la requête:', results);
 
-    if (results.length === 0) return res.status(404).json({ error: 'Aucun média trouvé pour cet utilisateur' });
+    if (results.length === 0) return res.status(404).json({ error: 'Aucun média trouvé pour cet utilisateur 🫥' });
 
     res.status(200).json(results);
   });
@@ -210,7 +210,7 @@ app.get('/media/file/:filename', (req, res) => {
 
   res.sendFile(filepath, (err) => {
     if (err) {
-      res.status(404).json({ error: 'Fichier introuvable' });
+      res.status(404).json({ error: 'Fichier introuvable 🫥' });
     }
   });
 });
@@ -228,7 +228,7 @@ app.get('/media/id/:id_media', (req, res) => {
     }
 
     if (results.length === 0) {
-      return res.status(404).json({ error: 'Média non trouvé' });
+      return res.status(404).json({ error: 'Média non trouvé 🫥' });
     }
 
     const media = results[0];
@@ -237,7 +237,7 @@ app.get('/media/id/:id_media', (req, res) => {
     // Envoyer le fichier média
     res.sendFile(filepath, (err) => {
       if (err) {
-        res.status(404).json({ error: 'Fichier introuvable' });
+        res.status(404).json({ error: 'Fichier introuvable 🫥' });
       }
     });
   });
@@ -259,7 +259,7 @@ app.get('/posts-txt', (req, res) => {
   db.query(query, queryParams, (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des posts:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération des posts' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     // Vérifie s'il reste encore des posts à charger
@@ -281,11 +281,11 @@ app.get('/posts-txt/:id', (req, res) => {
   db.query(query, [postId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération du post:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération du post' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (results.length === 0) {
-      return res.status(404).json({ error: 'Post non trouvé' });
+      return res.status(404).json({ error: 'Post non trouvé 🫥' });
     }
 
     res.json(results[0]);
@@ -307,13 +307,13 @@ app.post('/posts-txt', verifyToken, (req, res) => {
   db.query(getUserQuery, [userId], (err, userResults) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération du username' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     console.log('userResults:', userResults); // Log userResults
 
     if (userResults.length === 0) {
-      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+      return res.status(404).json({ error: 'Utilisateur non trouvé 🫥' });
     }
 
     const username = userResults[0].username;
@@ -322,7 +322,7 @@ app.post('/posts-txt', verifyToken, (req, res) => {
     db.query(insertPostQuery, [text, description, userId, username], (err, results) => {
       if (err) {
         console.error('Erreur lors de la création du post:', err);
-        return res.status(500).json({ error: 'Erreur lors de la création du post' });
+        return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
       }
 
       res.status(201).json({
@@ -346,7 +346,7 @@ app.post('/posts-txt/:id/like', verifyToken, (req, res) => {
     }
 
     if (results.length === 0) {
-      return res.status(404).json({ error: 'Post non trouvé' });
+      return res.status(404).json({ error: 'Post non trouvé 🫥' });
     }
 
     // Ajouter un like au post
@@ -402,11 +402,11 @@ app.post('/posts-media', verifyToken, upload.single('file'), (req, res) => {
   db.query(getUserQuery, [userId], (err, userResults) => {
     if (err) {
       console.error('Erreur lors de la récupération du username:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération du username' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (userResults.length === 0) {
-      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+      return res.status(404).json({ error: 'Utilisateur non trouvé 🫥' });
     }
 
     const username = userResults[0].username;
@@ -422,7 +422,7 @@ app.post('/posts-media', verifyToken, upload.single('file'), (req, res) => {
       [userId, filename, filetype, filepath], (err, mediaResult) => {
         if (err) {
           console.error('Erreur lors de l\'insertion du média:', err);
-          return res.status(500).json({ error: 'Erreur lors de l\'upload' });
+          return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
         }
 
         const id_media = mediaResult.insertId;
@@ -432,7 +432,7 @@ app.post('/posts-media', verifyToken, upload.single('file'), (req, res) => {
           [id_media, description, username, userId], (err, postResult) => {
             if (err) {
               console.error('Erreur lors de la création du post média:', err);
-              return res.status(500).json({ error: 'Erreur lors de la création du post' });
+              return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
             }
 
             res.status(201).json({
@@ -451,7 +451,7 @@ app.get('/posts-media', (req, res) => {
   db.query(query, (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des posts médias:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération des posts médias' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     res.json({ mediaPosts: results });
@@ -492,7 +492,7 @@ app.get('/articles', (req, res) => {
   db.query(query, queryParams, (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération des articles:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération des articles' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     // Vérifie s'il reste encore des articles à charger
@@ -514,11 +514,11 @@ app.get('/articles/:id', (req, res) => {
   db.query(query, [articleId], (err, results) => {
     if (err) {
       console.error('Erreur lors de la récupération de l\'article:', err);
-      return res.status(500).json({ error: 'Erreur lors de la récupération de l\'article' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     if (results.length === 0) {
-      return res.status(404).json({ error: 'Article non trouvé' });
+      return res.status(404).json({ error: 'Article non trouvé 🫥' });
     }
 
     res.json(results[0]);
@@ -979,7 +979,7 @@ app.post('/profil-1-2', upload.single('photo_profil'), (req, res) => {
       db.query(insertProfileQuery, [username, mediaId, JSON.stringify(parsedSportsPratiques)], (err, profileResults) => {
         if (err) {
           console.error('Erreur lors de la création du profil:', err);
-          return res.status(500).json({ error: 'Erreur lors de la création du profil' });
+          return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
         }
 
         res.status(201).json({ message: 'Profil créé avec succès', profilId: profileResults.insertId });
@@ -1000,7 +1000,7 @@ app.put('/profil-2-2/', (req, res) => {
   db.query(query, [JSON.stringify(sports_suivis), username], (err, results) => {
     if (err) {
       console.error('Erreur lors de la mise à jour du profil:', err);
-      return res.status(500).json({ error: 'Erreur lors de la mise à jour du profil' });
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
     res.status(200).json({ message: 'Profil mis à jour avec succès' });
