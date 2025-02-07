@@ -131,6 +131,7 @@ app.post('/login', (req, res) => {
 });
 
 
+
 //------------------------------------------
 // Route pour uploader une image ou vidéo
 app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
@@ -168,9 +169,11 @@ app.post('/upload', verifyToken, upload.single('file'), (req, res) => {
   });
 });
 
+
+
 //------------------------------------------
 // Route pour récupérer les médias d'un utilisateur
-app.get('/media/user/:user_id', (req, res) => {
+app.get('/media/user/:user_id', verifyToken, (req, res) => {
   const { user_id } = req.params;
 
   console.log('Requête pour récupérer les médias de l\'utilisateur avec user_id:', user_id);
