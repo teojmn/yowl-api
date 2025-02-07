@@ -441,7 +441,8 @@ app.get('/posts-media', (req, res) => {
 });
 
 // Route pour récupérer les posts médias d'un utilisateur
-app.get('/posts-media/user/:user_id', verifyToken, (req, res) => {
+app.get('/posts-media/user/:user_id', (req, res) => {
+  console.log('Route /posts-media/user/:user_id atteinte');
   const { user_id } = req.params;
 
   console.log('Requête pour récupérer les posts médias de l\'utilisateur avec user_id:', user_id);
