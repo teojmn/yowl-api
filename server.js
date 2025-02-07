@@ -440,6 +440,25 @@ app.get('/posts-media', (req, res) => {
   });
 });
 
+// Route pour récupérer les posts médias d'un utilisateur
+app.get('/posts-media/user/:user_id', verifyToken, (req, res) => {
+  const { user_id } = req.params;
+
+  console.log('Requête pour récupérer les posts médias de l\'utilisateur avec user_id:', user_id);
+
+  db.query('SELECT * FROM POST_MEDIA WHERE user_id = ?', [user_id], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération des posts médias :', err);
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
+    }
+
+    console.log('Résultats de la requête:', results);
+
+    if (results.length === 0) return res.status(404).json({ error: 'Aucun post média trouvé pour cet utilisateur' });
+
+    res.status(200).json(results);
+  });
+});
 
 
 //------------------------------------------
