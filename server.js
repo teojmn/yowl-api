@@ -1024,4 +1024,4 @@ app.get('/profil/:user_id', (req, res) => {
 
     res.json(results[0]);
   });
-}
+});
