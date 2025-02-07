@@ -1014,18 +1014,33 @@ app.get('/profil/:user_id', (req, res) => {
 
   console.log('Requête pour récupérer le profil avec user_id:', user_id); // Log the user_id
 
-  db.query('SELECT * FROM PROFIL WHERE user_id = ?', [user_id], (err, results) => {
+  // Récupérer le username à partir du user_id
+  db.query('SELECT username FROM USERS WHERE user_id = ?', [user_id], (err, userResults) => {
     if (err) {
-      console.error('Erreur lors de la récupération du profil :', err);
+      console.error('Erreur lors de la récupération du username :', err);
       return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
     }
 
-    console.log('Résultats de la requête:', results); // Log the results
-
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Profil non trouvé 🫥' });
+    if (userResults.length === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé 🫥' });
     }
 
-    res.json(results[0]);
+    const username = userResults[0].username;
+
+    // Utiliser le username pour récupérer le profil
+    db.query('SELECT * FROM PROFIL WHERE username = ?', [username], (err, profileResults) => {
+      if (err) {
+        console.error('Erreur lors de la récupération du profil :', err);
+        return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
+      }
+
+      console.log('Résultats de la requête:', profileResults); // Log the results
+
+      if (profileResults.length === 0) {
+        return res.status(404).json({ error: 'Profil non trouvé 🫥' });
+      }
+
+      res.json(profileResults[0]);
+    });
   });
 });
