@@ -1006,3 +1006,22 @@ app.put('/profil-2-2/', (req, res) => {
     res.status(200).json({ message: 'Profil mis à jour avec succès' });
   });
 });
+
+
+// Route pour récupérer un profil par son user_id
+app.get('/profil/:user_id', (req, res) => {
+  const { user_id } = req.params;
+
+  db.query('SELECT * FROM PROFIL WHERE user_id = ?', [user_id], (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération du profil :', err);
+      return res.status(500).json({ error: 'Désolé, on a une erreur de notre côté 😅' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Profil non trouvé 🫥' });
+    }
+
+    res.json(results[0]);
+  });
+}
