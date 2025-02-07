@@ -131,6 +131,16 @@ app.post('/login', (req, res) => {
 });
 
 
+//Route pour récupérer username & pdp (messages)
+app.get('/users', (req, res) => {
+  db.query('SELECT username, photo_profil FROM PROFIL', (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+    }
+    res.json(results);
+  });
+});
+
 
 //------------------------------------------
 // Route pour uploader une image ou vidéo
