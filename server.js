@@ -442,10 +442,7 @@ app.get('/posts-media', (req, res) => {
 
 // Route pour récupérer les posts médias d'un utilisateur
 app.get('/posts-media/user/:user_id', (req, res) => {
-  console.log('Route /posts-media/user/:user_id atteinte');
   const { user_id } = req.params;
-
-  console.log('Requête pour récupérer les posts médias de l\'utilisateur avec user_id:', user_id);
 
   db.query('SELECT * FROM POST_MEDIA WHERE user_id = ?', [user_id], (err, results) => {
     if (err) {
@@ -455,7 +452,7 @@ app.get('/posts-media/user/:user_id', (req, res) => {
 
     console.log('Résultats de la requête:', results);
 
-    if (results.length === 0) return res.status(404).json({ error: 'Aucun post média trouvé pour cet utilisateur' });
+    if (results.length === 0) return res.status(404).json({ error: 'Il semble qu\'il n\'y a rien à voir ici 🫥' });
 
     res.status(200).json(results);
   });
